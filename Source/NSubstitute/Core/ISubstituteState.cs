@@ -18,6 +18,7 @@ namespace NSubstitute.Core
         IAutoValueProvider[] AutoValueProviders { get; }
         ICallBaseExclusions CallBaseExclusions { get; }
         IResultsForType ResultsForType { get; }
+        ICustomHandlers CustomHandlers { get; }
         void ClearUnusedCallSpecs();
     }
 }

@@ -11,6 +11,11 @@ namespace NSubstitute.Specs.Infrastructure
         {
             return new ConfiguredCall(x => { });
         }
+
+        public void RegisterCustomCallHandler(CallHandlerFactory factory)
+        {
+        }
+
         public void Clear(ClearOptions clear) { }
 
         public IEnumerable<ICall> ReceivedCalls() { return new ICall[0]; }

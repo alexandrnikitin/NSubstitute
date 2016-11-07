@@ -75,6 +75,7 @@ namespace NSubstitute.Routing
                 , new ReturnConfiguredResultHandler(state.CallResults)
                 , new ReturnResultForTypeHandler(state.ResultsForType)
                 , new ReturnFromBaseIfRequired(state.SubstituteConfig, state.CallBaseExclusions)
+                , new InvokeCustomHandlers(state.CustomHandlers)
                 , new ReturnAutoValue(AutoValueBehaviour.UseValueForSubsequentCalls, state.AutoValueProviders, state.ConfigureCall)
                 , new ReturnFromAndConfigureDynamicCall(state.ConfigureCall)
                 , ReturnDefaultForReturnTypeHandler()
