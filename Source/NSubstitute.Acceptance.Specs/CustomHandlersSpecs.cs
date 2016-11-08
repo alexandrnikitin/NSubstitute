@@ -167,7 +167,7 @@ namespace NSubstitute.Acceptance.Specs
                     }));
 
             //act
-            source.MethodWithArgs(Arg.Any<string>(), Arg.Is("42"));
+            source.MethodWithArgs(Arg.Any<string>(), Arg.Is("42")).Returns("");
 
             //assert
             Assert.That(wasInvoked, Is.False);
