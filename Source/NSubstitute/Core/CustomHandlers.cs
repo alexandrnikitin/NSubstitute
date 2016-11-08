@@ -8,14 +8,13 @@ namespace NSubstitute.Core
         private readonly ISubstituteState _substituteState;
         private readonly List<ICallHandler> _handlers = new List<ICallHandler>();
 
+        public IEnumerable<ICallHandler> Handlers => _handlers;
+        public IDictionary<object, object> HandlerDataStorage { get; } = new ConcurrentDictionary<object, object>();
+
         public CustomHandlers(ISubstituteState substituteState)
         {
             _substituteState = substituteState;
         }
-
-        public IEnumerable<ICallHandler> Handlers => _handlers;
-
-        public IDictionary<object, object> HandlerDataStorage { get; } = new ConcurrentDictionary<object, object>();
 
         public void AddCustomHandlerFactory(CallHandlerFactory factory)
         {
