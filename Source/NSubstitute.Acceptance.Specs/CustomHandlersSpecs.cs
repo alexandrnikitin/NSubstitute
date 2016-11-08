@@ -16,7 +16,28 @@ namespace NSubstitute.Acceptance.Specs
             var router = SubstitutionContext.Current.GetCallRouterFor(source);
 
             router.RegisterCustomCallHandler(state =>
-                new DelegatingCallHandler(
+                new ActionHandler(
+                    _ => RouteAction.Return("42")));
+
+            //act
+            var result = source.GetValue();
+
+            //assert
+            Assert.That(result, Is.EqualTo("42"));
+        }
+
+        [Test]
+        public void Value_from_custom_handler_is_returned_for_setup_after_invocation()
+        {
+            //arrange
+            var source = Substitute.For<IValueSource>();
+            var router = SubstitutionContext.Current.GetCallRouterFor(source);
+
+            //invoke it before registering handler
+            source.GetValue();
+
+            router.RegisterCustomCallHandler(state =>
+                new ActionHandler(
                     _ => RouteAction.Return("42")));
 
             //act
@@ -36,7 +57,7 @@ namespace NSubstitute.Acceptance.Specs
             var values = new Queue<string>(new[] { "42", "10" });
 
             router.RegisterCustomCallHandler(state =>
-                new DelegatingCallHandler(
+                new ActionHandler(
                     _ => RouteAction.Return(values.Dequeue())));
 
             //act
@@ -55,7 +76,7 @@ namespace NSubstitute.Acceptance.Specs
             var router = SubstitutionContext.Current.GetCallRouterFor(source);
 
             router.RegisterCustomCallHandler(state =>
-                new DelegatingCallHandler(
+                new ActionHandler(
                     _ => RouteAction.Return("xxx")));
 
             source.GetValue().Returns("42");
@@ -76,7 +97,7 @@ namespace NSubstitute.Acceptance.Specs
 
             //Configure our handler to update "ref" argument value
             router.RegisterCustomCallHandler(state =>
-                new DelegatingCallHandler(
+                new ActionHandler(
                     call =>
                     {
                         if (call.GetMethodInfo().Name != nameof(IValueSource.GetValueWithRef))
@@ -107,7 +128,7 @@ namespace NSubstitute.Acceptance.Specs
 
             //Configure our handler to update "out" argument value
             router.RegisterCustomCallHandler(state =>
-                new DelegatingCallHandler(
+                new ActionHandler(
                     call =>
                     {
                         if (call.GetMethodInfo().Name != nameof(IValueSource.GetValueWithOut))
@@ -139,7 +160,7 @@ namespace NSubstitute.Acceptance.Specs
 
             bool wasInvoked = false;
             router.RegisterCustomCallHandler(state =>
-                    new DelegatingCallHandler(_ =>
+                    new ActionHandler(_ =>
                     {
                         wasInvoked = true;
                         return RouteAction.Continue();
@@ -160,7 +181,7 @@ namespace NSubstitute.Acceptance.Specs
             var router = SubstitutionContext.Current.GetCallRouterFor(source);
 
             router.RegisterCustomCallHandler(state =>
-                    new DelegatingCallHandler(_ => RouteAction.Continue()));
+                    new ActionHandler(_ => RouteAction.Continue()));
 
             //act
             var result = source.GetValue();
@@ -177,11 +198,11 @@ namespace NSubstitute.Acceptance.Specs
             var router = SubstitutionContext.Current.GetCallRouterFor(source);
 
             router.RegisterCustomCallHandler(state =>
-                new DelegatingCallHandler(
+                new ActionHandler(
                     _ => RouteAction.Return("42")));
 
             router.RegisterCustomCallHandler(state =>
-                new DelegatingCallHandler(
+                new ActionHandler(
                     _ => RouteAction.Return("10")));
 
             //act
@@ -200,11 +221,11 @@ namespace NSubstitute.Acceptance.Specs
             string MethodWithArgs(string arg1, string arg2);
         }
 
-        private class DelegatingCallHandler : ICallHandler
+        private class ActionHandler : ICallHandler
         {
             private readonly Func<ICall, RouteAction> _handler;
 
-            public DelegatingCallHandler(Func<ICall, RouteAction> handler)
+            public ActionHandler(Func<ICall, RouteAction> handler)
             {
                 _handler = handler;
             }

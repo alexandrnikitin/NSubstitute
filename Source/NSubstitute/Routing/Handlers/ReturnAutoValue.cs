@@ -14,18 +14,23 @@ namespace NSubstitute.Routing.Handlers
     public class ReturnAutoValue : ICallHandler
     {
         private readonly IEnumerable<IAutoValueProvider> _autoValueProviders;
+        private readonly ICallResultsCache _resultsCache;
         private readonly AutoValueBehaviour _autoValueBehaviour;
-        private readonly IConfigureCall ConfigureCall;
 
-        public ReturnAutoValue(AutoValueBehaviour autoValueBehaviour, IEnumerable<IAutoValueProvider> autoValueProviders, IConfigureCall configureCall)
+        public ReturnAutoValue(AutoValueBehaviour autoValueBehaviour, IEnumerable<IAutoValueProvider> autoValueProviders, ICallResultsCache resultsCache)
         {
             _autoValueProviders = autoValueProviders;
-            ConfigureCall = configureCall;
+            _resultsCache = resultsCache;
             _autoValueBehaviour = autoValueBehaviour;
         }
 
         public RouteAction Handle(ICall call)
         {
+            if (_resultsCache.HasResultFor(call))
+            {
+                return RouteAction.Return(_resultsCache.GetResult(call));
+            }
+
             var type = call.GetReturnType();
             var compatibleProviders = _autoValueProviders.Where(x => x.CanProvideValueFor(type)).FirstOrNothing();
             return compatibleProviders.Fold(
@@ -40,7 +45,7 @@ namespace NSubstitute.Routing.Handlers
                 var valueToReturn = provider.GetValue(type);
                 if (_autoValueBehaviour == AutoValueBehaviour.UseValueForSubsequentCalls)
                 {
-                    ConfigureCall.SetResultForCall(call, new ReturnValue(valueToReturn), MatchArgs.AsSpecifiedInCall);
+                    _resultsCache.SetResultForCall(call, new ReturnValue(valueToReturn), MatchArgs.AsSpecifiedInCall);
                 }
                 return RouteAction.Return(valueToReturn);
             };

@@ -16,7 +16,7 @@ namespace NSubstitute.Specs.Routing.Handlers
             protected IAutoValueProvider _secondAutoValueProvider;
             protected RouteAction _result;
             protected ICall _call;
-            protected IConfigureCall ConfigureCall;
+            protected ICallResultsCache ResultsCache;
 
             public override void Because()
             {
@@ -26,7 +26,7 @@ namespace NSubstitute.Specs.Routing.Handlers
             public override void Context()
             {
                 base.Context();
-                ConfigureCall = mock<IConfigureCall>();
+                ResultsCache = mock<ICallResultsCache>();
                 _call = mock<ICall>();
                 _call.stub(x => x.GetReturnType()).Return(_type);
                 _firstAutoValueProvider = mock<IAutoValueProvider>();
@@ -35,7 +35,7 @@ namespace NSubstitute.Specs.Routing.Handlers
 
             public ReturnAutoValue CreateReturnAutoValue(AutoValueBehaviour autoValueBehaviour)
             {
-                return new ReturnAutoValue(autoValueBehaviour, new[] {_firstAutoValueProvider, _secondAutoValueProvider}, ConfigureCall);
+                return new ReturnAutoValue(autoValueBehaviour, new[] {_firstAutoValueProvider, _secondAutoValueProvider}, ResultsCache);
             }
         }
 
@@ -52,7 +52,7 @@ namespace NSubstitute.Specs.Routing.Handlers
             [Test]
             public void Should_set_auto_value_as_value_to_return_for_subsequent_calls()
             {
-                ConfigureCall.received(x => x.SetResultForCall(It.Is(_call), It.Matches<IReturn>(arg => arg.ReturnFor(null) == _autoValue), It.Is(MatchArgs.AsSpecifiedInCall)));
+                ResultsCache.received(x => x.SetResultForCall(It.Is(_call), It.Matches<IReturn>(arg => arg.ReturnFor(null) == _autoValue), It.Is(MatchArgs.AsSpecifiedInCall)));
             }
 
             public override void Context()
@@ -95,7 +95,7 @@ namespace NSubstitute.Specs.Routing.Handlers
             [Test]
             public void Should_set_auto_value_as_value_to_return_for_subsequent_calls()
             {
-                ConfigureCall.did_not_receive_with_any_args(x => x.SetResultForCall(null, null, null));
+                ResultsCache.did_not_receive_with_any_args(x => x.SetResultForCall(null, null, null));
             }
 
             public override void Context()
