@@ -6,18 +6,12 @@ namespace NSubstitute.Core
     public class CallResults : ICallResults
     {
         readonly ICallInfoFactory _callInfoFactory;
-        private readonly bool _skipVoidMethods;
         ConcurrentQueue<ResultForCallSpec> _results;
 
-        public CallResults(ICallInfoFactory callInfoFactory, bool skipVoidMethodsForPerformance)
+        public CallResults(ICallInfoFactory callInfoFactory)
         {
             _results = new ConcurrentQueue<ResultForCallSpec>();
             _callInfoFactory = callInfoFactory;
-            _skipVoidMethods = skipVoidMethodsForPerformance;
-        }
-
-        public CallResults(ICallInfoFactory callInfoFactory) : this(callInfoFactory, true)
-        {
         }
 
         public void SetResult(ICallSpecification callSpecification, IReturn result)
@@ -27,7 +21,7 @@ namespace NSubstitute.Core
 
         public bool HasResultFor(ICall call)
         {
-            if (_skipVoidMethods && ReturnsVoidFrom(call)) return false;
+            if (SkipVoidCall(call)) return false;
             return _results.Any(x => x.IsResultFor(call));
         }
 
@@ -44,7 +38,10 @@ namespace NSubstitute.Core
             _results = new ConcurrentQueue<ResultForCallSpec>();
         }
 
-        bool ReturnsVoidFrom(ICall call)
+        /// <summary>
+        /// API to allow creation of custom <see cref="CallResults"/> which do not skip void methods.
+        /// </summary>
+        protected virtual bool SkipVoidCall(ICall call)
         {
             return call.GetReturnType() == typeof(void);
         }
