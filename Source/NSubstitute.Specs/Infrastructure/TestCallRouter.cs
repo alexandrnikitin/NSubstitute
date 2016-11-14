@@ -12,7 +12,7 @@ namespace NSubstitute.Specs.Infrastructure
             return new ConfiguredCall(x => { });
         }
 
-        public void RegisterCustomCallHandler(CallHandlerFactory factory)
+        public void RegisterCustomCallHandlerFactory(CallHandlerFactory factory)
         {
         }
 

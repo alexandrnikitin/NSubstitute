@@ -96,7 +96,7 @@ namespace NSubstitute.Core
             _substituteState.ResultsForType.SetResult(type, returnValue);
         }
 
-        public void RegisterCustomCallHandler(CallHandlerFactory factory)
+        public void RegisterCustomCallHandlerFactory(CallHandlerFactory factory)
         {
             if (factory == null) throw new ArgumentNullException(nameof(factory));
 

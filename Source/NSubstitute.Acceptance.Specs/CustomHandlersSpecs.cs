@@ -15,7 +15,7 @@ namespace NSubstitute.Acceptance.Specs
             var source = Substitute.For<IValueSource>();
             var router = SubstitutionContext.Current.GetCallRouterFor(source);
 
-            router.RegisterCustomCallHandler(state =>
+            router.RegisterCustomCallHandlerFactory(state =>
                 new ActionHandler(
                     _ => RouteAction.Return("42")));
 
@@ -36,7 +36,7 @@ namespace NSubstitute.Acceptance.Specs
             //invoke it before registering handler
             source.GetValue();
 
-            router.RegisterCustomCallHandler(state =>
+            router.RegisterCustomCallHandlerFactory(state =>
                 new ActionHandler(
                     _ => RouteAction.Return("42")));
 
@@ -56,7 +56,7 @@ namespace NSubstitute.Acceptance.Specs
 
             var values = new Queue<string>(new[] { "42", "10" });
 
-            router.RegisterCustomCallHandler(state =>
+            router.RegisterCustomCallHandlerFactory(state =>
                 new ActionHandler(
                     _ => RouteAction.Return(values.Dequeue())));
 
@@ -75,7 +75,7 @@ namespace NSubstitute.Acceptance.Specs
             var source = Substitute.For<IValueSource>();
             var router = SubstitutionContext.Current.GetCallRouterFor(source);
 
-            router.RegisterCustomCallHandler(state =>
+            router.RegisterCustomCallHandlerFactory(state =>
                 new ActionHandler(
                     _ => RouteAction.Return("xxx")));
 
@@ -96,7 +96,7 @@ namespace NSubstitute.Acceptance.Specs
             var router = SubstitutionContext.Current.GetCallRouterFor(source);
 
             //Configure our handler to update "ref" argument value
-            router.RegisterCustomCallHandler(state =>
+            router.RegisterCustomCallHandlerFactory(state =>
                 new ActionHandler(
                     call =>
                     {
@@ -127,7 +127,7 @@ namespace NSubstitute.Acceptance.Specs
             var router = SubstitutionContext.Current.GetCallRouterFor(source);
 
             //Configure our handler to update "out" argument value
-            router.RegisterCustomCallHandler(state =>
+            router.RegisterCustomCallHandlerFactory(state =>
                 new ActionHandler(
                     call =>
                     {
@@ -159,7 +159,7 @@ namespace NSubstitute.Acceptance.Specs
             var router = SubstitutionContext.Current.GetCallRouterFor(source);
 
             bool wasInvoked = false;
-            router.RegisterCustomCallHandler(state =>
+            router.RegisterCustomCallHandlerFactory(state =>
                     new ActionHandler(_ =>
                     {
                         wasInvoked = true;
@@ -180,7 +180,7 @@ namespace NSubstitute.Acceptance.Specs
             var source = Substitute.For<IValueSource>();
             var router = SubstitutionContext.Current.GetCallRouterFor(source);
 
-            router.RegisterCustomCallHandler(state =>
+            router.RegisterCustomCallHandlerFactory(state =>
                     new ActionHandler(_ => RouteAction.Continue()));
 
             //act
@@ -197,11 +197,11 @@ namespace NSubstitute.Acceptance.Specs
             var source = Substitute.For<IValueSource>();
             var router = SubstitutionContext.Current.GetCallRouterFor(source);
 
-            router.RegisterCustomCallHandler(state =>
+            router.RegisterCustomCallHandlerFactory(state =>
                 new ActionHandler(
                     _ => RouteAction.Return("42")));
 
-            router.RegisterCustomCallHandler(state =>
+            router.RegisterCustomCallHandlerFactory(state =>
                 new ActionHandler(
                     _ => RouteAction.Return("10")));
 
