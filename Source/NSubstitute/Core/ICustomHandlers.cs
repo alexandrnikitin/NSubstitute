@@ -10,7 +10,6 @@ namespace NSubstitute.Core
     public interface ICustomHandlers
     {
         IEnumerable<ICallHandler> Handlers { get; }
-        IDictionary<object, object> HandlerDataStorage { get; }
         void AddCustomHandlerFactory(CallHandlerFactory factory);
     }
 }

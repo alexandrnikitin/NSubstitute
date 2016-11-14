@@ -1,15 +1,13 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace NSubstitute.Core
 {
     public class CustomHandlers : ICustomHandlers
     {
-        private readonly ISubstituteState _substituteState;
         private readonly List<ICallHandler> _handlers = new List<ICallHandler>();
+        private readonly ISubstituteState _substituteState;
 
         public IEnumerable<ICallHandler> Handlers => _handlers;
-        public IDictionary<object, object> HandlerDataStorage { get; } = new ConcurrentDictionary<object, object>();
 
         public CustomHandlers(ISubstituteState substituteState)
         {
