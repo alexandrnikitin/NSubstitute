@@ -20,7 +20,16 @@ namespace NSubstitute.Proxies.CastleDynamicProxy
         {
             ConfigureDynamicProxyToAvoidReplicatingProblematicAttributes();
 
-            _proxyGenerator = new ProxyGenerator();
+            _proxyGenerator =
+                new ProxyGenerator(
+                    new DefaultProxyBuilder(
+                        new ModuleScope(
+                            false,
+                            false,
+                            ModuleScope.DEFAULT_ASSEMBLY_NAME,
+                            ModuleScope.DEFAULT_FILE_NAME,
+                            ModuleScope.DEFAULT_ASSEMBLY_NAME,
+                            ModuleScope.DEFAULT_FILE_NAME)));
             _allMethodsExceptCallRouterCallsHook = new AllMethodsExceptCallRouterCallsHook();
         }
 
