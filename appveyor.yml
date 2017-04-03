@@ -10,7 +10,7 @@ environment:
 
 before_test:
   - dotnet --info
-  - dotnet restore
+  - dotnet restore Source/NSubstitute.NETCore.sln
 
 test_script:
   - dotnet test -c %Configuration% -f %Framework% Source/NSubstitute.Acceptance.Specs
