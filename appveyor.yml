@@ -8,10 +8,12 @@ environment:
     - Configuration: Release
       Framework: netcoreapp1.0
 
-before_test:
+init:
   - dotnet --info
-  - dotnet restore
 
+build_script:
+  - build.bat Build targets=netstandard1.5 mode=%Configuration%
+      
 test_script:
   - dotnet test -c %Configuration% -f %Framework% Source/NSubstitute.Acceptance.Specs
 
